@@ -3,7 +3,6 @@ import { IsBoolean, IsString, Length } from "class-validator";
 
 @ArgsType()
 export class createRestaurantDto {
-
   @Field(type => String)
   @IsString()
   @Length(5, 10)
