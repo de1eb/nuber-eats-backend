@@ -1,19 +1,23 @@
-import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
-import { CreateAccountInput, CreateAccountOutput } from "./dtos/create-account.dto";
-import { LoginInput, LoginOutput } from "./dtos/login.dto";
-import { User } from "./entities/user.entity";
-import { UserService } from "./users.service";
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  CreateAccountInput,
+  CreateAccountOutput,
+} from './dtos/create-account.dto';
+import { LoginInput, LoginOutput } from './dtos/login.dto';
+import { User } from './entities/user.entity';
+import { UserService } from './users.service';
 
 @Resolver(of => User)
 export class UserResolver {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
   @Query(returns => Boolean)
   hi() {
     return true;
   }
 
   @Mutation(returns => CreateAccountOutput)
-  async createAccount(@Args("input") createAccountInput: CreateAccountInput
+  async createAccount(
+    @Args('input') createAccountInput: CreateAccountInput,
   ): Promise<CreateAccountOutput> {
     try {
       // return this.userService.createAccount(createAccountInput);
@@ -28,7 +32,7 @@ export class UserResolver {
   }
 
   @Mutation(returns => LoginOutput)
-  async login(@Args("input") loginInput: LoginInput): Promise<LoginOutput> {
+  async login(@Args('input') loginInput: LoginInput): Promise<LoginOutput> {
     try {
       return await this.userService.login(loginInput);
     } catch (error) {
@@ -40,5 +44,11 @@ export class UserResolver {
   }
 
   @Query(returns => User)
-  me() { }
+  me(@Context() context) {
+    if (!context.user) {
+      return;
+    } else {
+      return context.user;
+    }
+  }
 }
