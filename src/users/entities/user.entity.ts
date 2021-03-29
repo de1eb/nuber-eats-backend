@@ -26,8 +26,8 @@ export class User extends CoreEntity {
   @IsEmail()
   email: string;
 
-  @Column({ default: false })
-  @Field()
+  @Column({ select: false })
+  @Field(type => String)
   password: string;
 
   @Column({ type: 'enum', enum: UserRole })
@@ -35,7 +35,7 @@ export class User extends CoreEntity {
   @IsEnum(UserRole)
   role: UserRole;
 
-  @Column()
+  @Column({ default: false })
   @Field(type => Boolean)
   verified: boolean;
 

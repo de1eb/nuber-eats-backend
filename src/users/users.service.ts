@@ -106,6 +106,7 @@ export class UserService {
     { email, password }: EditProfileInput,
   ): Promise<UserProfileOutput> {
     try {
+      console.log("userId in editProfile: ", userId);
       const user = await this.users.findOne(userId);
       if (email) {
         user.email = email;

@@ -15,7 +15,7 @@ import { UserService } from './users.service';
 
 @Resolver(of => User)
 export class UserResolver {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
   @Query(returns => Boolean)
   hi() {
     return true;
@@ -50,10 +50,12 @@ export class UserResolver {
   @UseGuards(AuthGuard)
   @Mutation(returns => EditProfileOutput)
   async editProfile(
-    @AuthUser() authUser: User,
+    @AuthUser() authUser: { ok: boolean, user: User },
     @Args('input') editProfileInput: EditProfileInput,
   ): Promise<EditProfileOutput> {
-    return this.userService.editProfile(authUser.id, editProfileInput);
+    console.log("authUser in resolver: ", authUser);
+    console.log("authUser.id in resolver: ", authUser.user.id);
+    return this.userService.editProfile(authUser.user.id, editProfileInput);
   }
 
   @Mutation(returns => VerifyEmailOutput)
