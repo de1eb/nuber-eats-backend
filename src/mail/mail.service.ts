@@ -30,7 +30,7 @@ export class MailService {
     }
   }
 
-  sendVerficiationEmail(email: string, code: string) {
+  sendVerificationEmail(email: string, code: string) {
     this.sendEmail("Verify Your Email", "email_account_verification", [
       { key: "code", value: code },
       { key: "username", value: email }
