@@ -30,7 +30,7 @@ describe("UserService", () => {
   let verificationRepository: MockRepository<Verification>;
   let mailService: MailService;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const module = await Test.createTestingModule({
       providers: [UserService,
         {
@@ -107,8 +107,32 @@ describe("UserService", () => {
       );
       expect(result).toEqual({ ok: true });
     });
+    it("should fail on exception", async () => {
+      userRepository.findOne.mockRejectedValue(new Error());
+      const result = await service.createAccount(createAccountArgs);
+      expect(result).toEqual({ ok: false, error: "Couldn't create account" });
+    });
   });
-  it.todo("login");
+
+  describe("login", () => {
+    const loginArgs = {
+      email: "bs@email.com",
+      password: "bs.password",
+    };
+    it("should fail if user does not exist", async () => {
+      userRepository.findOne.mockResolvedValue(null);
+      const result = await service.login(loginArgs);
+      expect(userRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(userRepository.findOne).toHaveBeenCalledWith(
+        expect.any(Object),
+        expect.any(Object),
+      );
+      expect(result).toEqual({
+        ok: false,
+        error: 'User not found',
+      });
+    });
+  });
   it.todo("userProfile");
   it.todo("editProfile");
   it.todo("verifyEmail");
