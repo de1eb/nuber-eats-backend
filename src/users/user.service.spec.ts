@@ -213,9 +213,20 @@ describe("UserService", () => {
         email: editProfileArgs.input.email,
       }
 
-      userRepository.findOne.mockResolvedValue(mockedUser);
+      userRepository.findOne.mockResolvedValue(oldUser);
       expect(userRepository.findOne).toHaveBeenCalledTimes(1);
       expect(userRepository.findOne).toHaveBeenCalledWith(1);
+      expect(verificationRepository.save).toHaveBeenCalledTimes(1);
+      expect(verificationRepository.save).toHaveBeenCalledWith(newVerification);
+      expect(verificationRepository.create).toHaveBeenCalledWith(oldUser);
+      expect(verificationRepository.create).toHaveBeenCalledTimes(1);
+      verificationRepository.create.mockResolvedValue(newVerification);
+      expect(mailService.sendVerificationEmail).toHaveBeenCalledWith(oldUser.email, newVerification.code);
+
+      // oldUser.password =
+
+      expect(userRepository.save).toHaveBeenCalledWith({})
+
       await service.editProfile(editProfileArgs.userId, editProfileArgs.input);
 
     });
