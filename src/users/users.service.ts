@@ -96,9 +96,6 @@ export class UserService {
     }
   }
 
-  // async editProfile(userId: number, editProfileInput: EditProfileInput) {
-  //   return this.users.update(userId, { ...editProfileInput });
-  // }
   async editProfile(
     userId: number,
     { email, password }: EditProfileInput,
@@ -142,10 +139,7 @@ export class UserService {
       }
       return { ok: false, error: 'Verification not found.' };
     } catch (error) {
-      return {
-        ok: false,
-        error,
-      };
+      return { ok: false, error: 'Could not verify email.' };
     }
   }
 }
