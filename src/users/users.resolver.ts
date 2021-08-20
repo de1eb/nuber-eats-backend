@@ -50,12 +50,10 @@ export class UserResolver {
   @UseGuards(AuthGuard)
   @Mutation(returns => EditProfileOutput)
   async editProfile(
-    @AuthUser() authUser: { ok: boolean, user: User },
+    @AuthUser() authUser: User,
     @Args('input') editProfileInput: EditProfileInput,
   ): Promise<EditProfileOutput> {
-    console.log("authUser in resolver: ", authUser);
-    console.log("authUser.id in resolver: ", authUser.user.id);
-    return this.userService.editProfile(authUser.user.id, editProfileInput);
+    return this.userService.editProfile(authUser.id, editProfileInput);
   }
 
   @Mutation(returns => VerifyEmailOutput)
