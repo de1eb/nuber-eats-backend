@@ -1,24 +1,28 @@
-import { v4 as uuidv4 } from "uuid";
 import { Field, InputType, ObjectType } from "@nestjs/graphql";
-import { BeforeInsert, Column, Entity, JoinColumn, OneToMany, OneToOne } from "typeorm";
-import { CoreEntity } from "../../common/entities/core.entity";
 import { IsString, Length } from "class-validator";
+import { Column, Entity, OneToMany } from "typeorm";
+import { CoreEntity } from "../../common/entities/core.entity";
 import { Restaurant } from "./restaurant.entity";
 
 @InputType("CategoryInputType", { isAbstract: true })
 @ObjectType()
 @Entity()
 export class Category extends CoreEntity {
-  @Column()
+  @Column({ unique: true })
   @Field(type => String)
   @IsString()
   @Length(5)
   name: string;
 
-  @Field(type => String)
-  @Column()
+  @Field(type => String, { nullable: true })
+  @Column({ nullable: true })
   @IsString()
-  coverImag: string;
+  coverImg: string;
+
+  @Field(type => String)
+  @Column({ unique: true })
+  @IsString()
+  slug: string;
 
   @Field(type => [Restaurant], { nullable: true })
   @OneToMany(type => Restaurant, restaurant => restaurant.category)
