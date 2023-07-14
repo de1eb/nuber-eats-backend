@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { JwtService } from '../jwt/jwt.service';
+import { MailService } from '../mail/mail.service';
 import {
   CreateAccountInput,
   CreateAccountOutput,
 } from './dtos/create-account.dto';
-import { LoginInput, LoginOutput } from './dtos/login.dto';
-import { User } from './entities/user.entity';
-import { JwtService } from '../jwt/jwt.service';
 import { EditProfileInput } from './dtos/edit-profile.dto';
-import { Verification } from './entities/verification.entity';
+import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { UserProfileOutput } from './dtos/user-profile.dto';
 import { VerifyEmailOutput } from './dtos/verify-email.dto';
-import { MailService } from '../mail/mail.service';
+import { User } from './entities/user.entity';
+import { Verification } from './entities/verification.entity';
 
 @Injectable()
 export class UserService {
@@ -31,7 +31,7 @@ export class UserService {
     role,
   }: CreateAccountInput): Promise<CreateAccountOutput> {
     try {
-      const exists = await this.users.findOne({ email });
+      const exists = await this.users.findOne({ where: { email } });
       if (exists) {
         return { ok: false, error: 'There is a user with that email already' };
       }
@@ -52,10 +52,10 @@ export class UserService {
 
   async login({ email, password }: LoginInput): Promise<LoginOutput> {
     try {
-      const user = await this.users.findOne(
-        { email },
-        { select: ['id', 'password'] },
-      );
+      const user = await this.users.findOne({
+        where: { email },
+        select: ['id', 'password']
+      });
       if (!user) {
         return {
           ok: false,
@@ -83,7 +83,7 @@ export class UserService {
 
   async findById(id: number): Promise<UserProfileOutput> {
     try {
-      const user = await this.users.findOneOrFail({ id });
+      const user = await this.users.findOneOrFail({ where: { id } });
       return {
         ok: true,
         user,
@@ -101,7 +101,7 @@ export class UserService {
     { email, password }: EditProfileInput,
   ): Promise<UserProfileOutput> {
     try {
-      const user = await this.users.findOne(userId);
+      const user = await this.users.findOne({ where: { id: userId } });
       if (email) {
         user.email = email;
         user.verified = false;
@@ -128,9 +128,10 @@ export class UserService {
   async verifyEmail(code: string): Promise<VerifyEmailOutput> {
     try {
       const verification = await this.verifications.findOne(
-        { code },
-        { relations: ['user'] },
-      );
+        {
+          where: { code },
+          relations: ['user'],
+        });
       if (verification) {
         verification.user.verified = true;
         await this.users.save(verification.user);
