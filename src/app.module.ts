@@ -57,7 +57,6 @@ import { UsersModule } from './users/users.module';
       autoSchemaFile: true,
       context: ({ req }) => ({ user: req['user'] }),
     }),
-    UsersModule,
     JwtModule.forRoot({ privateKey: process.env.PRIVATE_KEY }),
     AuthModule,
     MailModule.forRoot({
@@ -65,6 +64,8 @@ import { UsersModule } from './users/users.module';
       domain: process.env.MAILGUN_DOMAIN_NAME,
       fromEmail: process.env.MAILGUN_FROM_EMAIL,
     }),
+    AuthModule,
+    UsersModule,
     RestaurantsModule
   ],
   controllers: [],
