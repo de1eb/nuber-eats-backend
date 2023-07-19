@@ -7,15 +7,13 @@ export class CategoryRepository {
   constructor(private dataSource: DataSource) {
     // super(Category, dataSource.createEntityManager());
   }
+  categoryRepository = this.dataSource.getRepository(Category)
   async getOrCreate(name: string): Promise<Category> {
-    const categoryRepository = this.dataSource.getRepository(Category)
     const categoryName = name.trim().toLowerCase();
     const categorySlug = categoryName.replace(/ /g, '-');
-    console.log('---------------------------3')
-    let category = await categoryRepository.findOne({ where: { slug: categorySlug } });
-    console.log('---------------------------4')
+    let category = await this.categoryRepository.findOne({ where: { slug: categorySlug } });
     if (!category) {
-      category = await categoryRepository.save(categoryRepository.create({ slug: categorySlug, name: categoryName }))
+      category = await this.categoryRepository.save(this.categoryRepository.create({ slug: categorySlug, name: categoryName }))
     }
     return category
   }
