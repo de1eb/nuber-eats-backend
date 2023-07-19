@@ -8,13 +8,14 @@ export class CategoryRepository {
     // super(Category, dataSource.createEntityManager());
   }
   async getOrCreate(name: string): Promise<Category> {
+    const categoryRepository = this.dataSource.getRepository(Category)
     const categoryName = name.trim().toLowerCase();
     const categorySlug = categoryName.replace(/ /g, '-');
     console.log('---------------------------3')
-    let category = await this.dataSource.getRepository(Category).findOne({ where: { slug: categorySlug } });
+    let category = await categoryRepository.findOne({ where: { slug: categorySlug } });
     console.log('---------------------------4')
     if (!category) {
-      category = await this.dataSource.getRepository(Category).save(this.dataSource.getRepository(Category).create({ slug: categorySlug, name: categoryName }))
+      category = await categoryRepository.save(categoryRepository.create({ slug: categorySlug, name: categoryName }))
     }
     return category
   }
