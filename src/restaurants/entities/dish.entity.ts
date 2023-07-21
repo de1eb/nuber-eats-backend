@@ -4,17 +4,28 @@ import { Column, Entity, ManyToOne, RelationId } from "typeorm";
 import { CoreEntity } from "../../common/entities/core.entity";
 import { Restaurant } from "./restaurant.entity";
 
-@InputType('DishOptionInputType', { isAbstract: true })
+@InputType('DishChoiceInputType', { isAbstract: true })
 @ObjectType()
-class DishOption {
+class DishChoice {
   @Field(type => String)
   name: string;
 
-  @Field(type => [String], { nullable: true })
-  choices?: string[];
+  @Field(type => Int, { nullable: true })
+  extra?: number;
+}
 
-  @Field(type => Int)
-  extra: number;
+
+@InputType('DishOptionInputType', { isAbstract: true })
+@ObjectType()
+export class DishOption {
+  @Field(type => String)
+  name: string;
+
+  @Field(type => [DishChoice])
+  choices?: DishChoice[];
+
+  @Field(type => Int, { nullable: true })
+  extra?: number;
 }
 
 @InputType('DishInputType', { isAbstract: true })
