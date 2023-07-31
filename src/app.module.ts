@@ -13,7 +13,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 import { JwtModule } from './jwt/jwt.module';
 import { MailModule } from './mail/mail.module';
-import { OrderItem } from './orders/dtos/order-item.entity';
+import { OrderItem } from './orders/entities/order-item.entity';
 import { Order } from './orders/entities/order.entity';
 import { OrdersModule } from './orders/orders.module';
 import { Category } from './restaurants/entities/category.entity';

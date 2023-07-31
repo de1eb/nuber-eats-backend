@@ -4,7 +4,7 @@ import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from "typeorm";
 import { CoreEntity } from "../../common/entities/core.entity";
 import { Restaurant } from "../../restaurants/entities/restaurant.entity";
 import { User } from "../../users/entities/user.entity";
-import { OrderItem } from "../dtos/order-item.entity";
+import { OrderItem } from "./order-item.entity";
 
 export enum OrderStatus {
   Pending = 'Pending',
