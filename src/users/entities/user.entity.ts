@@ -10,6 +10,7 @@ import { IsBoolean, IsEmail, IsEnum, IsString } from 'class-validator';
 import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Order } from '../../orders/entities/order.entity';
+import { Payment } from '../../payments/entities/payment.entity';
 import { Restaurant } from '../../restaurants/entities/restaurant.entity';
 
 export enum UserRole {
@@ -54,6 +55,10 @@ export class User extends CoreEntity {
   @Field(type => [Order])
   @OneToMany(type => Order, order => order.driver)
   rides: Order[];
+
+  @Field(type => [Payment])
+  @OneToMany(type => Payment, payment => payment.user, { eager: true })
+  payments: Payment[];
 
   @BeforeInsert()
   @BeforeUpdate()
