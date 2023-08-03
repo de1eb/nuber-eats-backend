@@ -141,7 +141,7 @@ export class RestaurantService {
           error: 'Category not found'
         }
       }
-      const restaurants = await this.restaurants.find({ where: { id: category.id }, take: 25, skip: (page - 1) * 25 })
+      const restaurants = await this.restaurants.find({ where: { id: category.id }, take: 25, skip: (page - 1) * 25, order: { isPromoted: 'DESC' } })
       const totalResults = await this.countRestaurants(category);
       return {
         ok: true,
@@ -161,7 +161,8 @@ export class RestaurantService {
     try {
       const [restaurants, totalResults] = await this.restaurants.findAndCount({
         skip: (page - 1) * 25,
-        take: 25
+        take: 25,
+        order: { isPromoted: 'DESC' }
       })
       return {
         ok: true,

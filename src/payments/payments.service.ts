@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { Cron } from "@nestjs/schedule";
+import { Interval, SchedulerRegistry } from "@nestjs/schedule";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { LessThan, Repository } from "typeorm";
 import { Restaurant } from "../restaurants/entities/restaurant.entity";
 import { User } from "../users/entities/user.entity";
 import { CreatePaymentInput, CreatePaymentOutput } from "./dtos/create-payments.dto";
@@ -34,6 +34,11 @@ export class PaymentService {
         };
       }
       await this.payments.save(this.payments.create({ transactionId, user: owner, restaurant }));
+      restaurant.isPromoted = true;
+      const date = new Date();
+      date.setDate(date.getDate() + 7);
+      restaurant.promotedUntil = date;
+      this.restaurants.save(restaurant);
       return {
         ok: true
       };
@@ -60,20 +65,15 @@ export class PaymentService {
     }
   }
 
-  @Cron('30 * * * * *', { name: 'myJob' })
-  checkForPayments() {
-    console.log('Checking for payments...(cron)');
-    const job = this.schedulerRegistry.getCronJob('myJob');
-    job.stop();
-  }
-
-  @Interval(5000)
-  checkForPaymentsI() {
-    console.log('Checking for payments...(interval)');
-  }
-
-  @Timeout(20000)
-  afterStart() {
-    console.log('Congrats!');
+  @Interval(2000)
+  async checkPromotedRestaurants() {
+    const restaurants = await this.restaurants.find({
+      where: { isPromoted: true, promotedUntil: LessThan(new Date()) }
+    });
+    restaurants.forEach(async restaurant => {
+      restaurant.isPromoted = false;
+      restaurant.promotedUntil = null;
+      await this.restaurants.save(restaurant);
+    })
   }
 }
