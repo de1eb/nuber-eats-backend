@@ -59,7 +59,7 @@ export class CategoryResolver {
   constructor(private readonly restaurantService: RestaurantService) { }
 
   @ResolveField(type => Int)
-  async retraurantCount(@Parent() category: Category): Promise<number> {
+  async restaurantCount(@Parent() category: Category): Promise<number> {
     return this.restaurantService.countRestaurants(category);
   }
 
