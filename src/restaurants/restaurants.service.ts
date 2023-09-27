@@ -147,7 +147,8 @@ export class RestaurantService {
         ok: true,
         restaurants,
         category,
-        totalPages: Math.ceil(totalResults / 25)
+        totalPages: Math.ceil(totalResults / 25),
+        totalResults
       }
     } catch {
       return {
