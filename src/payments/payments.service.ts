@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Interval, SchedulerRegistry } from "@nestjs/schedule";
+import { SchedulerRegistry } from "@nestjs/schedule";
 import { InjectRepository } from "@nestjs/typeorm";
 import { LessThan, Repository } from "typeorm";
 import { Restaurant } from "../restaurants/entities/restaurant.entity";
@@ -65,7 +65,6 @@ export class PaymentService {
     }
   }
 
-  @Interval(2000)
   async checkPromotedRestaurants() {
     const restaurants = await this.restaurants.find({
       where: { isPromoted: true, promotedUntil: LessThan(new Date()) }
