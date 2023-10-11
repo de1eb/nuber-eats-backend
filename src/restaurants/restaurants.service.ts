@@ -302,7 +302,7 @@ export class RestaurantService {
 
   async myRestaurants(owner: User): Promise<MyRestaurantsOutput> {
     try {
-      const restaurants = await this.restaurants.find({ where: { id: owner.id } });
+      const restaurants = await this.restaurants.find({ where: { owner: { id: owner.id } } });
       return {
         restaurants,
         ok: true
