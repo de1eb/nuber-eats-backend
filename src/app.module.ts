@@ -25,6 +25,7 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
 import { User } from './users/entities/user.entity';
 import { Verification } from './users/entities/verification.entity';
 import { UsersModule } from './users/users.module';
+import { UploadsModule } from './uploads/uploads.module';
 
 @Module({
   imports: [
@@ -95,7 +96,8 @@ import { UsersModule } from './users/users.module';
     RestaurantsModule,
     OrdersModule,
     CommonModule,
-    PaymentsModule
+    PaymentsModule,
+    UploadsModule
   ],
   controllers: [],
   providers: [],
