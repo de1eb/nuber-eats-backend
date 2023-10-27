@@ -22,10 +22,10 @@ import { Category } from './restaurants/entities/category.entity';
 import { Dish } from './restaurants/entities/dish.entity';
 import { Restaurant } from './restaurants/entities/restaurant.entity';
 import { RestaurantsModule } from './restaurants/restaurants.module';
+import { UploadsModule } from './uploads/uploads.module';
 import { User } from './users/entities/user.entity';
 import { Verification } from './users/entities/verification.entity';
 import { UsersModule } from './users/users.module';
-import { UploadsModule } from './uploads/uploads.module';
 
 @Module({
   imports: [
@@ -46,6 +46,8 @@ import { UploadsModule } from './uploads/uploads.module';
         MAILGUN_API_KEY: Joi.string().required(),
         MAILGUN_DOMAIN_NAME: Joi.string().required(),
         MAILGUN_FROM_EMAIL: Joi.string().required(),
+        AWS_ACCESS_KEY: Joi.string().required(),
+        AWS_SECRET_ACESS_KEY: Joi.string().required()
       }),
     }),
     TypeOrmModule.forRoot({
@@ -97,7 +99,10 @@ import { UploadsModule } from './uploads/uploads.module';
     OrdersModule,
     CommonModule,
     PaymentsModule,
-    UploadsModule
+    UploadsModule.forRoot({
+      accessKey: process.env.AWS_ACCESS_KEY,
+      secretAccessKey: process.env.AWS_SECRET_ACESS_KEY
+    })
   ],
   controllers: [],
   providers: [],

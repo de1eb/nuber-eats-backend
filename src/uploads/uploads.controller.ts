@@ -1,22 +1,29 @@
-import { Controller, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Controller, Inject, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import AWS from 'aws-sdk';
+import * as AWS from 'aws-sdk';
+import { CONFIG_OPTIONS } from "../common/common.constans";
+import { UploadsModuleOptions } from "./uploads.interfaces";
 
-const BUCKET_NAME = 'kimchinubereats123';
+const BUCKET_NAME = 'norutest';
 @Controller('uploads')
 export class UploadsController {
+  constructor(
+    @Inject(CONFIG_OPTIONS) private readonly options: UploadsModuleOptions
+  ) { }
+
   @Post('')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
     AWS.config.update({
+      region: 'ap-northeast-2',
       credentials: {
-        accessKeyId: '',
-        secretAccessKey: '',
+        accessKeyId: this.options.accessKey,
+        secretAccessKey: this.options.secretAccessKey,
       }
     });
     try {
       const objectName = `${Date.now() + file.originalname}`;
-      await new AWS.S3().putObject({ Body: file.buffer, Bucket: BUCKET_NAME, Key: objectName, ACL: 'public-read' }).promise();
+      const asdf = await new AWS.S3().putObject({ Body: file.buffer, Bucket: BUCKET_NAME, Key: objectName }).promise();
       const url = `https://${BUCKET_NAME}.s3.amazonaws.com/${objectName}`;
       return { url };
     } catch (e) {
