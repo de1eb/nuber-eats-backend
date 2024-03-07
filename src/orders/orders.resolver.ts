@@ -33,7 +33,7 @@ export class OrderResolver {
     return this.orderService.getOrders(user, getOrdersInput);
   }
 
-  @Query(returns => GetOrdersOutput)
+  @Query(returns => GetOrderOutput)
   @Role(['Any'])
   async getOrder(@AuthUser() user: User, @Args('input') getOrderInput: GetOrderInput): Promise<GetOrderOutput> {
     return this.orderService.getOrder(user, getOrderInput);

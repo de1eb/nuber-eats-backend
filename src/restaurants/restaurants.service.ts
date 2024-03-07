@@ -327,7 +327,7 @@ export class RestaurantService {
     } catch {
       return {
         ok: false,
-        error: 'Could not find restaurants.'
+        error: 'Could not find restaurant.'
       }
     }
   }
