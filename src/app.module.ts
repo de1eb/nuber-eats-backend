@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import * as fs from 'fs';
 import { Context } from 'graphql-ws';
 import * as Joi from 'joi';
 import { AuthModule } from './auth/auth.module';
@@ -59,17 +60,12 @@ import { UsersModule } from './users/users.module';
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== "prod" && process.env.NODE_ENV !== "test",
       entities: [User, Verification, Restaurant, Category, Dish, Order, OrderItem, Payment],
+      ssl: process.env.NODE_ENV === 'prod' ? {
+        ca: fs.readFileSync('ap-northeast-2-bundle.pem')
+      } : false,
     }),
     GraphQLModule.forRoot({
       driver: ApolloDriver,
-      // installSubscriptionHandlers: true,
-      // subscriptions: {
-      //   'subscriptions-transport-ws': {
-      //     onConnect: (connectionParams: any) => ({
-      //       token: connectionParams['x-jwt']
-      //     })
-      //   }
-      // },
       subscriptions: {
         'graphql-ws': {
           onConnect: (context: Context) => {
@@ -107,10 +103,3 @@ import { UsersModule } from './users/users.module';
   providers: [],
 })
 export class AppModule { }
-// export class AppModule implements NestModule {
-//   configure(consumer: MiddlewareConsumer) {
-//     consumer
-//       .apply(JwtMiddleware)
-//       .forRoutes({ path: '/graphql', method: RequestMethod.POST });
-//   }
-// }
