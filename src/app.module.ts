@@ -78,7 +78,8 @@ import { UsersModule } from './users/users.module';
       autoSchemaFile: true,
       context: ({ req, extra }) => {
         return { token: req ? req.headers[TOKEN_KEY] : extra.token };
-      }
+      },
+      playground: process.env.NODE_ENV !== 'prod'
     }),
     ScheduleModule.forRoot(),
     JwtModule.forRoot({ privateKey: process.env.PRIVATE_KEY }),
