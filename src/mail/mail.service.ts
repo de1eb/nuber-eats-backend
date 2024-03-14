@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import got from 'got';
 import * as FormData from "form-data";
+import got from 'got';
 import { CONFIG_OPTIONS } from '../common/common.constans';
 import { EmailVar, MailModuleOptions } from './mail.interfaces';
 
@@ -13,7 +13,7 @@ export class MailService {
   async sendEmail(subject: string, template: string, emailVars: EmailVar[], userEmail: string): Promise<boolean> {
     try {
       const form = new FormData();
-      form.append("from", `Deleb from Zmeunnuri <mailgun@${this.options.domain}>`);
+      form.append("from", `Nuber Eats <mailgun@${this.options.domain}>`);
       form.append("to", userEmail);
       form.append("subject", subject);
       form.append("template", template);
@@ -36,6 +36,6 @@ export class MailService {
     this.sendEmail("Verify Your Email", "email_account_verification", [
       { key: "code", value: code },
       { key: "username", value: email }
-    ], "penetra.okulo@gmail.com");
+    ], email);
   }
 }
