@@ -12,6 +12,7 @@ import * as Joi from 'joi';
 import { AuthModule } from './auth/auth.module';
 import { TOKEN_KEY } from './common/common.constans';
 import { CommonModule } from './common/common.module';
+import { HealthModule } from './health/health.module';
 import { JwtModule } from './jwt/jwt.module';
 import { MailModule } from './mail/mail.module';
 import { OrderItem } from './orders/entities/order-item.entity';
@@ -98,7 +99,8 @@ import { UsersModule } from './users/users.module';
     UploadsModule.forRoot({
       accessKey: process.env.AWS_ACCESS_KEY,
       secretAccessKey: process.env.AWS_SECRET_ACESS_KEY
-    })
+    }),
+    HealthModule
   ],
   controllers: [],
   providers: [],
