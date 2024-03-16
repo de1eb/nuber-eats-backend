@@ -16,7 +16,7 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+    origin: ["https://nuber-eats.work"],
     methods: ['PUT']
   })
   // app.use(jwtMiddleWare);
