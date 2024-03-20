@@ -28,6 +28,7 @@ export class UploadsController {
       const url = `https://${BUCKET_NAME}.s3.${region}.amazonaws.com/${objectName}`;
       return { url };
     } catch (e) {
+      console.log(e);
       return null;
     }
   }
