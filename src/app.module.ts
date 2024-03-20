@@ -72,7 +72,6 @@ import { UsersModule } from './users/users.module';
           onConnect: (context: Context) => {
             const { connectionParams, extra } = context;
             extra["token"] = connectionParams[TOKEN_KEY];
-            console.log(context);
           }
         }
       },

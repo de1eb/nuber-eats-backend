@@ -70,7 +70,6 @@ export class RestaurantService {
       }
       let category: Category = null;
       if (editRestaurantInput.categoryName) {
-        console.log(editRestaurantInput.categoryName)
         category = await this.categories.getOrCreate(editRestaurantInput.categoryName);
       }
       await this.restaurants.save([{ id: editRestaurantInput.restaurantId, ...editRestaurantInput, ...(category && { category }) }])
