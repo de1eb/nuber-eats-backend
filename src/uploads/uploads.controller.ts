@@ -1,6 +1,6 @@
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Controller, Inject, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import * as AWS from 'aws-sdk';
 import { CONFIG_OPTIONS } from "../common/common.constans";
 import { UploadsModuleOptions } from "./uploads.interfaces";
 
@@ -15,7 +15,7 @@ export class UploadsController {
   @Post('')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    AWS.config.update({
+    const client = new S3Client({
       region: region,
       credentials: {
         accessKeyId: this.options.accessKey,
@@ -24,7 +24,13 @@ export class UploadsController {
     });
     try {
       const objectName = `${Date.now() + file.originalname}`;
-      const asdf = await new AWS.S3().putObject({ Body: file.buffer, Bucket: BUCKET_NAME, Key: objectName }).promise();
+      const input = {
+        Bucket: BUCKET_NAME,
+        Body: file.buffer,
+        Key: objectName
+      }
+      const command = new PutObjectCommand(input);
+      const response = await client.send(command)
       const url = `https://${BUCKET_NAME}.s3.${region}.amazonaws.com/${objectName}`;
       return { url };
     } catch (e) {

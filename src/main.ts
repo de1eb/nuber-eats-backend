@@ -3,7 +3,6 @@ import { NestFactory } from '@nestjs/core';
 import * as fs from 'fs';
 import { AppModule } from './app.module';
 import { SSL_PATH } from './common/common.constans';
-// import { jwtMiddleWare } from './jwt/jwt.middleware';
 
 async function bootstrap() {
   const keyFile = fs.readFileSync(SSL_PATH + '/key.pem');
@@ -19,7 +18,6 @@ async function bootstrap() {
     origin: ["https://nuber-eats.work"],
     methods: ['PUT']
   })
-  // app.use(jwtMiddleWare);
   await app.listen(4000);
 }
 bootstrap();
