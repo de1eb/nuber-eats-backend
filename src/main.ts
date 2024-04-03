@@ -17,7 +17,7 @@ async function bootstrap() {
   }) : null;
 
   const corsConfig = process.env.NODE_ENV === 'prod' ? {
-    origin: ["https://nuber-eats.work"],
+    origin: ["https://nuber-eats.click, https://www.nuber-eats.click"],
     methods: ['PUT']
   } : {
     origin: ["http://localhost:3000"],
