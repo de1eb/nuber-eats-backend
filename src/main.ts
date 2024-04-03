@@ -24,7 +24,7 @@ async function bootstrap() {
     methods: ['PUT']
   }
 
-  const port = process.env.NODE_ENV === 'prod' ? 443 : 4000;
+  const port = 4000;
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors(corsConfig)
   await app.listen(port);
