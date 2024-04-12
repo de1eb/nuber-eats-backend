@@ -5,7 +5,8 @@ import { CONFIG_OPTIONS } from "../common/common.constans";
 import { UploadsModuleOptions } from "./uploads.interfaces";
 
 const BUCKET_NAME = 'norutest';
-const region = 'ap-northeast-2'
+const region = 'ap-northeast-2';
+const CLOUDFRONT_ADDRESS = 'd1o25ch8l375u4.cloudfront.net';
 @Controller('uploads')
 export class UploadsController {
   constructor(
@@ -31,7 +32,7 @@ export class UploadsController {
       }
       const command = new PutObjectCommand(input);
       const response = await client.send(command)
-      const url = `https://${BUCKET_NAME}.s3.${region}.amazonaws.com/${objectName}`;
+      const url = `https://${CLOUDFRONT_ADDRESS}/images/restaurants/${objectName}`;
       return { url };
     } catch (e) {
       console.log(e);
