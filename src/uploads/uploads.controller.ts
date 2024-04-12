@@ -4,7 +4,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { CONFIG_OPTIONS } from "../common/common.constans";
 import { UploadsModuleOptions } from "./uploads.interfaces";
 
-const BUCKET_NAME = 'norutest';
+const BUCKET_NAME = 'nuber-eats-images';
 const region = 'ap-northeast-2';
 const CLOUDFRONT_ADDRESS = 'd1o25ch8l375u4.cloudfront.net';
 @Controller('uploads')
