@@ -24,7 +24,7 @@ export class UploadsController {
       }
     });
     try {
-      const objectName = `${Date.now() + file.originalname}`;
+      const objectName = `/images/restaurants/${Date.now() + file.originalname}`;
       const input = {
         Bucket: BUCKET_NAME,
         Body: file.buffer,
