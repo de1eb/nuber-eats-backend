@@ -24,7 +24,7 @@ export class UploadsController {
       }
     });
     try {
-      const objectName = `/images/restaurants/${Date.now() + file.originalname}`;
+      const objectName = `images/restaurants/${Date.now() + file.originalname}`;
       const input = {
         Bucket: BUCKET_NAME,
         Body: file.buffer,
@@ -32,7 +32,7 @@ export class UploadsController {
       }
       const command = new PutObjectCommand(input);
       const response = await client.send(command)
-      const url = `https://${CLOUDFRONT_ADDRESS}/images/restaurants/${objectName}`;
+      const url = `https://${CLOUDFRONT_ADDRESS}/${objectName}`;
       return { url };
     } catch (e) {
       console.log(e);
