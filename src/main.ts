@@ -1,20 +1,20 @@
-import { ValidationPipe } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as fs from 'fs';
 import { AppModule } from './app.module';
-import { SSL_CERTIFICATE_LETS_ENCRYPT_PATH, SSL_CERTIFICATE_SELFSIGNED_PATH, SSL_KEY_LETS_ENCRYPT_PATH, SSL_KEY_SELFSIGNED_PATH } from './common/common.constans';
+import { SSL_CERTIFICATE_LETS_ENCRYPT_PATH, SSL_KEY_LETS_ENCRYPT_PATH } from './common/common.constans';
 
 async function bootstrap() {
-  const keyFile = process.env.NODE_ENV === 'prod' ? fs.readFileSync(SSL_KEY_LETS_ENCRYPT_PATH) : fs.readFileSync(SSL_KEY_SELFSIGNED_PATH);
-  const certFile = process.env.NODE_ENV === 'prod' ? fs.readFileSync(SSL_CERTIFICATE_LETS_ENCRYPT_PATH) : fs.readFileSync(SSL_CERTIFICATE_SELFSIGNED_PATH);
-  let app = await NestFactory.create(AppModule);
+  const keyFile = process.env.NODE_ENV === 'prod' ? fs.readFileSync(SSL_KEY_LETS_ENCRYPT_PATH) : null;
+  const certFile = process.env.NODE_ENV === 'prod' ? fs.readFileSync(SSL_CERTIFICATE_LETS_ENCRYPT_PATH) : null;
+  let app: INestApplication<any>;
 
   process.env.NODE_ENV === 'prod' ? app = await NestFactory.create(AppModule, {
     httpsOptions: {
       key: keyFile,
       cert: certFile
     }
-  }) : null;
+  }) : app = await NestFactory.create(AppModule);
 
   const corsConfig = process.env.NODE_ENV === 'prod' ? {
     origin: ["https://nuber-eats.click", "https://www.nuber-eats.click"],

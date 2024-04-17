@@ -127,7 +127,7 @@ export class RestaurantService {
   }
 
   countRestaurants(category: Category) {
-    return this.restaurants.count({ where: { id: category.id } });
+    return this.restaurants.count({ where: { category: { id: category.id } } });
   }
 
   async findCategoryBySlug({ slug, page }: CategoryInput): Promise<CategoryOutput> {
@@ -143,7 +143,7 @@ export class RestaurantService {
           error: 'Category not found'
         }
       }
-      const restaurants = await this.restaurants.find({ where: { id: category.id }, take: 25, skip: (page - 1) * 25, order: { isPromoted: 'DESC' } })
+      const restaurants = await this.restaurants.find({ where: { category: { id: category.id } }, take: 25, skip: (page - 1) * 25, order: { isPromoted: 'DESC' } })
       const totalResults = await this.countRestaurants(category);
       return {
         ok: true,
