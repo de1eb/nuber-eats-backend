@@ -1,11 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
 import { HealthCheckService, HttpHealthIndicator } from '@nestjs/terminus';
+import { HealthService } from './health.service';
 
 @Controller('health')
 export class HealthController {
   constructor(
     private health: HealthCheckService,
     private http: HttpHealthIndicator,
+    private healthService: HealthService
   ) { }
 
   // @Get()
@@ -18,7 +20,7 @@ export class HealthController {
 
   @Get()
   check() {
-    return 'all good'
+    return this.healthService.check();
   }
 
 }

@@ -34,8 +34,8 @@ export class UploadsController {
       const response = await client.send(command)
       const url = `https://${CLOUDFRONT_ADDRESS}/${objectName}`;
       return { url };
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
       return null;
     }
   }

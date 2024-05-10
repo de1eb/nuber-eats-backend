@@ -1,9 +1,10 @@
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { getRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { JwtService } from '../jwt/jwt.service';
 import { MailService } from '../mail/mail.service';
-import { User } from './entities/user.entity';
+import { CreateAccountInput } from './dtos/create-account.dto';
+import { User, UserRole } from './entities/user.entity';
 import { Verification } from './entities/verification.entity';
 import { UserService } from './users.service';
 
@@ -67,10 +68,10 @@ describe('UserService', () => {
   });
 
   describe('createAccount', () => {
-    const createAccountArgs = {
+    const createAccountArgs: CreateAccountInput = {
       email: '',
       password: '',
-      role: 0,
+      role: UserRole.Client,
     };
     it('should fail if user exists', async () => {
       userRepository.findOne.mockResolvedValue({
@@ -129,10 +130,10 @@ describe('UserService', () => {
       userRepository.findOne.mockResolvedValue(null);
       const result = await service.login(loginArgs);
       expect(userRepository.findOne).toHaveBeenCalledTimes(1);
-      expect(userRepository.findOne).toHaveBeenCalledWith(
-        expect.any(Object),
-        expect.any(Object),
-      );
+      expect(userRepository.findOne).toHaveBeenCalledWith({
+        where: { email: loginArgs.email },
+        select: expect.any(Array),
+      });
       expect(result).toEqual({
         ok: false,
         error: 'User not found',
@@ -223,7 +224,7 @@ describe('UserService', () => {
 
       expect(userRepository.findOne).toHaveBeenCalledTimes(1);
       expect(userRepository.findOne).toHaveBeenCalledWith(
-        editProfileArgs.userId,
+        { where: { id: editProfileArgs.userId } }
       );
       expect(verificationRepository.create).toHaveBeenCalledTimes(1);
       expect(verificationRepository.create).toHaveBeenCalledWith({
@@ -271,7 +272,7 @@ describe('UserService', () => {
       const result = await service.verifyEmail("");
 
       expect(verificationRepository.findOne).toHaveBeenCalledTimes(1);
-      expect(verificationRepository.findOne).toHaveBeenCalledWith(expect.any(Object), expect.any(Object));
+      expect(verificationRepository.findOne).toHaveBeenCalledWith({ where: expect.any(Object), relations: expect.any(Array) });
 
       expect(userRepository.save).toHaveBeenCalledTimes(1);
       expect(userRepository.save).toHaveBeenCalledWith({ verified: true });

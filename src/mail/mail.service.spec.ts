@@ -1,8 +1,8 @@
 import { Test } from "@nestjs/testing";
-import got from "got";
 import * as FormData from "form-data";
+import got from "got";
 import { CONFIG_OPTIONS } from "../common/common.constans";
-import { MailService } from "./mail.service"
+import { MailService } from "./mail.service";
 
 jest.mock("got");
 jest.mock("form-data");
@@ -52,7 +52,7 @@ describe("MailService", () => {
           { key: "code", value: sendVerificationEmailArgs.code },
           { key: "username", value: sendVerificationEmailArgs.email },
         ],
-        "penetra.okulo@gmail.com",
+        sendVerificationEmailArgs.email,
       );
     });
   });

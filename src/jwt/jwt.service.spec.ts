@@ -1,7 +1,7 @@
 import { Test } from "@nestjs/testing";
+import * as jwt from "jsonwebtoken";
 import { CONFIG_OPTIONS } from "../common/common.constans";
 import { JwtService } from "./jwt.service";
-import * as jwt from "jsonwebtoken";
 
 const TEST_KEY = "testKey";
 const USER_ID = 1;
@@ -36,7 +36,7 @@ describe("JwtService", () => {
       const token = service.sign(USER_ID);
       expect(typeof token).toBe("string");
       expect(jwt.sign).toHaveBeenCalledTimes(1);
-      expect(jwt.sign).toHaveBeenCalledWith({ id: USER_ID }, TEST_KEY);
+      expect(jwt.sign).toHaveBeenCalledWith({ id: USER_ID, exp: expect.closeTo(Math.floor(Date.now() / 1000) + (60 * 60)) }, TEST_KEY);
     });
   });
   describe("verify", () => {

@@ -45,7 +45,8 @@ export class UserService {
       );
       this.mailService.sendVerificationEmail(user.email, verification.code);
       return { ok: true };
-    } catch (e) {
+    } catch (error) {
+      console.log(error);
       return { ok: false, error: "Couldn't create account" };
     }
   }
@@ -74,6 +75,7 @@ export class UserService {
         token: this.jwtService.sign(user.id),
       };
     } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: "Can't log user in",
@@ -88,7 +90,8 @@ export class UserService {
         ok: true,
         user,
       };
-    } catch (e) {
+    } catch (error) {
+      console.log(error);
       return {
         error: 'User Not Found',
         ok: false,
@@ -142,6 +145,7 @@ export class UserService {
       }
       return { ok: false, error: 'Verification not found.' };
     } catch (error) {
+      console.log(error);
       return { ok: false, error: 'Could not verify email.' };
     }
   }

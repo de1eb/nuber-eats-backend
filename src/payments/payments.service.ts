@@ -42,7 +42,8 @@ export class PaymentService {
       return {
         ok: true
       };
-    } catch {
+    } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: 'Could not create payment.'
@@ -57,7 +58,8 @@ export class PaymentService {
         ok: true,
         payments
       };
-    } catch {
+    } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: 'Could not load payments.'

@@ -45,7 +45,8 @@ export class RestaurantService {
         ok: true,
         restaurantId: newRestaurant.id
       };
-    } catch {
+    } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: 'Could not create restaurant'
@@ -76,7 +77,8 @@ export class RestaurantService {
       return {
         ok: true
       }
-    } catch {
+    } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: 'Could not edit Restaurant'
@@ -103,7 +105,8 @@ export class RestaurantService {
       return {
         ok: true
       }
-    } catch {
+    } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: 'Could not delete Restaurant'
@@ -118,7 +121,8 @@ export class RestaurantService {
         ok: true,
         categories,
       };
-    } catch {
+    } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: 'Could not load categories',
@@ -152,7 +156,8 @@ export class RestaurantService {
         totalPages: Math.ceil(totalResults / 25),
         totalResults
       }
-    } catch {
+    } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: 'Could not load category'
@@ -173,7 +178,8 @@ export class RestaurantService {
         totalPages: Math.ceil(totalResults / 3),
         totalResults
       }
-    } catch {
+    } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: 'Could not load restaurants'
@@ -194,7 +200,8 @@ export class RestaurantService {
         ok: true,
         restaurant
       };
-    } catch {
+    } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: 'Could not find restaurant'
@@ -202,16 +209,33 @@ export class RestaurantService {
     }
   }
 
-  async searchRestaurantByName({ query, page }: SearchRestaurantInput): Promise<SearchRestaurantOutput> {
+  async searchRestaurant({ query, page }: SearchRestaurantInput): Promise<SearchRestaurantOutput> {
     try {
-      const [restaurants, totalResults] = await this.restaurants.findAndCount({ where: { name: ILike(`%${query}%`) }, skip: (page - 1) * 25, take: 25 });
+      const decodedQuery = decodeURIComponent(query);
+      const [restaurants, totalResults] = await this.restaurants.findAndCount({ where: [{ name: ILike(`%${decodedQuery}%`) }, { menu: { name: ILike(`%${decodedQuery}%`) } }], skip: (page - 1) * 25, take: 25 });
       return {
         ok: true,
         restaurants,
         totalResults,
         totalPages: Math.ceil(totalResults / 25)
       }
-    } catch {
+    } catch (error) {
+      console.log(error);
+      return { ok: false, error: 'Could not search for restaurants' };
+    }
+  }
+
+  async searchRestaurantByDish({ query, page }: SearchRestaurantInput): Promise<SearchRestaurantOutput> {
+    try {
+      const [restaurants, totalResults] = await this.restaurants.findAndCount({ where: { menu: { name: ILike(`%${decodeURIComponent(query)}%`) } }, skip: (page - 1) * 25, take: 25 });
+      return {
+        ok: true,
+        restaurants,
+        totalResults,
+        totalPages: Math.ceil(totalResults / 25)
+      }
+    } catch (error) {
+      console.log(error);
       return { ok: false, error: 'Could not search for restaurants' };
     }
   }
@@ -265,7 +289,8 @@ export class RestaurantService {
       return {
         ok: true
       }
-    } catch {
+    } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: 'Could not delete dish'
@@ -293,7 +318,8 @@ export class RestaurantService {
       return {
         ok: true,
       }
-    } catch {
+    } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: 'Could not delete dish'
@@ -323,7 +349,8 @@ export class RestaurantService {
         restaurant,
         ok: true
       }
-    } catch {
+    } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: 'Could not find restaurant.'

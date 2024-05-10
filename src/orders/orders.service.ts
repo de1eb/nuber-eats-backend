@@ -73,8 +73,8 @@ export class OrderService {
         ok: true,
         orderId: order.id
       }
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: "Could not create order"
@@ -117,7 +117,8 @@ export class OrderService {
         ok: true,
         orders
       }
-    } catch {
+    } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: 'Could not get orders'
@@ -144,7 +145,8 @@ export class OrderService {
         ok: true,
         order
       }
-    } catch {
+    } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: 'Could not load order.'
@@ -208,7 +210,8 @@ export class OrderService {
       return {
         ok: true,
       }
-    } catch {
+    } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: 'Could not edit order.'
@@ -241,7 +244,8 @@ export class OrderService {
       return {
         ok: true
       };
-    } catch {
+    } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error: 'Could not update order.'

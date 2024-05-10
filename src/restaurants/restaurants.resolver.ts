@@ -54,7 +54,7 @@ export class RestaurantResolver {
 
   @Query(returns => SearchRestaurantOutput)
   searchRestaurant(@Args('input') searchRestaurantInput: SearchRestaurantInput): Promise<SearchRestaurantOutput> {
-    return this.restaurantService.searchRestaurantByName(searchRestaurantInput);
+    return this.restaurantService.searchRestaurant(searchRestaurantInput);
   }
 
   @Query(returns => MyRestaurantsOutput)
