@@ -1,83 +1,63 @@
-# 해당 워크플로우의 타이틀
-# 명시하지 않으면 파일 경로가 타이틀이 됨
 name: NUBER_EATS_BACKEND_CI_CD
-# 환경변수
 env:
   REGISTRY: ghcr.io
   DOCKER_IMAGE: ${{ github.repository }}
-  # github.repository변수는 owner/repository로 구성 ex)goodonion/nest_test
-  DOCKER_CONTAINER: my_api_server
+  DOCKER_CONTAINER: nuber-eats-backend
 
 on:
   push:
     branches: ['main']
 
+  pull_request:
+    branches: ['main']
+
 jobs:
   test:
-    # ubuntu-latest 환경의 Runner에서 실행
     runs-on: ubuntu-latest
-
-    # 컨테이너에 repository의 코드를 checkout
-    # node 환경 셋업
-    # 의존성 설치 및 테스트 진행
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
+
       - name: Setup node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
+
       - run: npm install
       - run: npm run test:cov
       - run: npm run test:e2e
 
-  # 도커 이미지 빌드
-
   build:
-    # build가 시작되려면 test가 완료되어야 함
     needs: test
     runs-on: ubuntu-latest
-
-    # Runner 에 repository의 코드를 checkout
-    # 컨테이너에 도커 환경 셋업
-    # Github Container Registry 로그인
-    # 도커 이미지 빌드 후 ghcr에 push
-
     steps:
       - name: Checkout Source Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
       - name: Set up docker build
-        id: buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
+
       - name: Login to ghcr
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.CI_CD_TOKEN }}
+
       - name: Build and Push
         id: docker_build
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.DOCKER_IMAGE }}:latest
 
-  # ec2 환경에 배포
-
   deploy:
     needs: build
-    # ec2에 설치한 Runner로 job 실행
-    # selfhost runner 설정 안해줄 경우 runner를 찾을 수 없어 action이 진행되지 않음
     runs-on: self-hosted
-    # runs-on: ubuntu-22.04
-
-    # Github Container Registry 로그인
-    # Docker Container 중지 및 삭제, Docker image 삭제
-    # 새로 배포한 Docker Image로 Container 실행
     steps:
       - name: Login to ghcr
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}

@@ -1,15 +1,15 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
-import { getConnection, Repository } from 'typeorm';
-import { User } from '../src/users/entities/user.entity';
+import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import * as request from 'supertest';
+import { DataSource, Repository } from 'typeorm';
+import { User } from '../src/users/entities/user.entity';
 import { Verification } from '../src/users/entities/verification.entity';
+import { AppModule } from './../src/app.module';
 
 jest.mock("got");
 
-const GRAPHQL_ENDPINT = "/graphql";
+const GRAPHQL_ENDPOINT = "/graphql";
 
 const testUser = {
   email: "abc@def.com",
@@ -22,7 +22,7 @@ describe('UserModule (e2e)', () => {
   let verificationsRepository: Repository<Verification>
   let jwtToken: string;
 
-  const baseTest = () => request(app.getHttpServer()).post(GRAPHQL_ENDPINT);
+  const baseTest = () => request(app.getHttpServer()).post(GRAPHQL_ENDPOINT);
   const publicTest = (query: string) => baseTest().send({ query });
   const privateTest = (query: string) =>
     baseTest()
@@ -43,7 +43,17 @@ describe('UserModule (e2e)', () => {
   });
 
   afterAll(async () => {
-    await getConnection().dropDatabase();
+    const dataSource: DataSource = new DataSource({
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: +process.env.DB_PORT,
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+    });
+    const connection: DataSource = await dataSource.initialize();
+    await connection.dropDatabase();
+    await connection.destroy();
     app.close();
   });
 
@@ -257,7 +267,7 @@ describe('UserModule (e2e)', () => {
   });
 
   describe("editProfile", () => {
-    const NEW_EMAIL = "nico@las.com";
+    const NEW_EMAIL = "new@asdf.com";
     it("should change email", () => {
       return privateTest(`
         mutation {
