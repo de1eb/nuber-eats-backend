@@ -39,6 +39,7 @@ jobs:
           echo "AWS_ACCESS_KEY=$AWS_ACCESS_KEY" >> .env.test
           echo "AWS_SECRET_ACESS_KEY=$AWS_SECRET_ACESS_KEY" >> .env.test
           cat .env.test
+        working-directory: ${{ github.workspace }}
         env:
           DB_HOST: 'localhost'
           DB_NAME: 'postgres'
@@ -84,6 +85,7 @@ jobs:
           echo "AWS_ACCESS_KEY=$AWS_ACCESS_KEY" >> .env.prod
           echo "AWS_SECRET_ACESS_KEY=$AWS_SECRET_ACESS_KEY" >> .env.prod
           cat .env.prod
+        working-directory: ${{ github.workspace }}
         env:
           DB_HOST: ${{ secrets.DB_HOST }}
           DB_NAME: ${{ secrets.DB_NAME }}
