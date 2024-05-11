@@ -44,7 +44,7 @@ jobs:
           echo "MAILGUN_API_KEY=$MAILGUN_API_KEY" >> .env.test
           echo "MAILGUN_DOMAIN_NAME=$MAILGUN_DOMAIN_NAME" >> .env.test
           echo "MAILGUN_FROM_EMAIL=$MAILGUN_FROM_EMAIL" >> .env.test
-          echo "PRIVATE_KEY=$PRIVATE_KEY" >> .env.test
+          echo "JWT_PRIVATE_KEY=$PRIVATE_KEY" >> .env.test
           echo "AWS_ACCESS_KEY=$AWS_ACCESS_KEY" >> .env.test
           echo "AWS_SECRET_ACESS_KEY=$AWS_SECRET_ACESS_KEY" >> .env.test
           cat .env.test
@@ -84,7 +84,7 @@ jobs:
           echo "MAILGUN_API_KEY=$MAILGUN_API_KEY" >> .env.prod
           echo "MAILGUN_DOMAIN_NAME=$MAILGUN_DOMAIN_NAME" >> .env.prod
           echo "MAILGUN_FROM_EMAIL=$MAILGUN_FROM_EMAIL" >> .env.prod
-          echo "PRIVATE_KEY=$PRIVATE_KEY" >> .env.prod
+          echo "JWT_PRIVATE_KEY=$PRIVATE_KEY" >> .env.prod
           echo "AWS_ACCESS_KEY=$AWS_ACCESS_KEY" >> .env.prod
           echo "AWS_SECRET_ACESS_KEY=$AWS_SECRET_ACESS_KEY" >> .env.prod
           cat .env.prod
