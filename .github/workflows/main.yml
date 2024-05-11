@@ -14,6 +14,15 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test
+        ports:
+          - 5432:5432
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
@@ -56,6 +65,32 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps:
+      - name: Generate Environment Variables File for Production
+        run: |
+          echo "DB_HOST=$DB_HOST" >> .env.prod
+          echo "DB_NAME=$DB_NAME" >> .env.prod
+          echo "DB_PASSWORD=$DB_PASSWORD" >> .env.prod
+          echo "DB_PORT=$DB_PORT" >> .env.prod
+          echo "DB_USERNAME=$DB_USERNAME" >> .env.prod
+          echo "MAILGUN_API_KEY=$MAILGUN_API_KEY" >> .env.prod
+          echo "MAILGUN_DOMAIN_NAME=$MAILGUN_DOMAIN_NAME" >> .env.prod
+          echo "MAILGUN_FROM_EMAIL=$MAILGUN_FROM_EMAIL" >> .env.prod
+          echo "PRIVATE_KEY=$PRIVATE_KEY" >> .env.prod
+          echo "AWS_ACCESS_KEY=$AWS_ACCESS_KEY" >> .env.prod
+          echo "AWS_SECRET_ACESS_KEY=$AWS_SECRET_ACESS_KEY" >> .env.prod
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
+          MAILGUN_DOMAIN_NAME: ${{ secrets.MAILGUN_DOMAIN_NAME }}
+          MAILGUN_FROM_EMAIL: ${{ secrets.MAILGUN_FROM_EMAIL }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACESS_KEY: ${{ secrets.AWS_SECRET_ACESS_KEY }}
+
       - name: Login to ghcr
         uses: docker/login-action@v3
         with:

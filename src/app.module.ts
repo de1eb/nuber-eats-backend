@@ -6,7 +6,6 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import * as fs from 'fs';
 import { Context } from 'graphql-ws';
 import * as Joi from 'joi';
 import { AuthModule } from './auth/auth.module';
@@ -15,18 +14,11 @@ import { CommonModule } from './common/common.module';
 import { HealthModule } from './health/health.module';
 import { JwtModule } from './jwt/jwt.module';
 import { MailModule } from './mail/mail.module';
-import { OrderItem } from './orders/entities/order-item.entity';
-import { Order } from './orders/entities/order.entity';
 import { OrdersModule } from './orders/orders.module';
-import { Payment } from './payments/entities/payment.entity';
 import { PaymentsModule } from './payments/payments.module';
-import { Category } from './restaurants/entities/category.entity';
-import { Dish } from './restaurants/entities/dish.entity';
-import { Restaurant } from './restaurants/entities/restaurant.entity';
 import { RestaurantsModule } from './restaurants/restaurants.module';
+import { typeorm_config_dev, typeorm_config_prod, typeorm_config_test } from './typeormConfig';
 import { UploadsModule } from './uploads/uploads.module';
-import { User } from './users/entities/user.entity';
-import { Verification } from './users/entities/verification.entity';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -43,7 +35,7 @@ import { UsersModule } from './users/users.module';
         DB_USERNAME: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
-        PRIVATE_KEY: Joi.string().required(),
+        JWT_PRIVATE_KEY: Joi.string().required(),
         MAILGUN_API_KEY: Joi.string().required(),
         MAILGUN_DOMAIN_NAME: Joi.string().required(),
         MAILGUN_FROM_EMAIL: Joi.string().required(),
@@ -51,20 +43,7 @@ import { UsersModule } from './users/users.module';
         AWS_SECRET_ACESS_KEY: Joi.string().required()
       }),
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DB_HOST,
-      port: +process.env.DB_PORT,
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      synchronize: process.env.NODE_ENV !== 'prod',
-      logging: process.env.NODE_ENV !== "prod" && process.env.NODE_ENV !== "test",
-      entities: [User, Verification, Restaurant, Category, Dish, Order, OrderItem, Payment],
-      ssl: process.env.NODE_ENV === 'prod' ? {
-        ca: fs.readFileSync('ap-northeast-2-bundle.pem')
-      } : false,
-    }),
+    TypeOrmModule.forRoot(process.env.NODE_ENV === 'prod' ? typeorm_config_prod : process.env.NODE_ENV === 'dev' ? typeorm_config_dev : process.env.NODE_ENV === 'test' ? typeorm_config_test : null),
     GraphQLModule.forRoot({
       driver: ApolloDriver,
       subscriptions: {
@@ -82,7 +61,7 @@ import { UsersModule } from './users/users.module';
       playground: process.env.NODE_ENV !== 'prod'
     }),
     ScheduleModule.forRoot(),
-    JwtModule.forRoot({ privateKey: process.env.PRIVATE_KEY }),
+    JwtModule.forRoot({ privateKey: process.env.JWT_PRIVATE_KEY }),
     AuthModule,
     MailModule.forRoot({
       apiKey: process.env.MAILGUN_API_KEY,
