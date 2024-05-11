@@ -26,17 +26,17 @@ jobs:
     steps:
       - name: Generate Environment Variables File for Test
         run: |
-          echo "DB_HOST=$DB_HOST" >> .env.test
-          echo "DB_NAME=$DB_NAME" >> .env.test
-          echo "DB_PASSWORD=$DB_PASSWORD" >> .env.test
-          echo "DB_PORT=$DB_PORT" >> .env.test
-          echo "DB_USERNAME=$DB_USERNAME" >> .env.test
-          echo "MAILGUN_API_KEY=$MAILGUN_API_KEY" >> .env.test
-          echo "MAILGUN_DOMAIN_NAME=$MAILGUN_DOMAIN_NAME" >> .env.test
-          echo "MAILGUN_FROM_EMAIL=$MAILGUN_FROM_EMAIL" >> .env.test
-          echo "PRIVATE_KEY=$PRIVATE_KEY" >> .env.test
-          echo "AWS_ACCESS_KEY=$AWS_ACCESS_KEY" >> .env.test
-          echo "AWS_SECRET_ACESS_KEY=$AWS_SECRET_ACESS_KEY" >> .env.test
+          echo "DB_HOST=$DB_HOST" >> $GITHUB_WORKSPACE/.env.test
+          echo "DB_NAME=$DB_NAME" >> $GITHUB_WORKSPACE.env.test
+          echo "DB_PASSWORD=$DB_PASSWORD" >> $GITHUB_WORKSPACE.env.test
+          echo "DB_PORT=$DB_PORT" >> $GITHUB_WORKSPACE.env.test
+          echo "DB_USERNAME=$DB_USERNAME" >> $GITHUB_WORKSPACE.env.test
+          echo "MAILGUN_API_KEY=$MAILGUN_API_KEY" >> $GITHUB_WORKSPACE.env.test
+          echo "MAILGUN_DOMAIN_NAME=$MAILGUN_DOMAIN_NAME" >> $GITHUB_WORKSPACE.env.test
+          echo "MAILGUN_FROM_EMAIL=$MAILGUN_FROM_EMAIL" >> $GITHUB_WORKSPACE.env.test
+          echo "PRIVATE_KEY=$PRIVATE_KEY" >> $GITHUB_WORKSPACE.env.test
+          echo "AWS_ACCESS_KEY=$AWS_ACCESS_KEY" >> $GITHUB_WORKSPACE.env.test
+          echo "AWS_SECRET_ACESS_KEY=$AWS_SECRET_ACESS_KEY" >> $GITHUB_WORKSPACE.env.test
         env:
           DB_HOST: 'localhost'
           DB_NAME: 'postgres'
@@ -69,17 +69,17 @@ jobs:
     steps:
       - name: Generate Environment Variables File for Production
         run: |
-          echo "DB_HOST=$DB_HOST" >> .env.prod
-          echo "DB_NAME=$DB_NAME" >> .env.prod
-          echo "DB_PASSWORD=$DB_PASSWORD" >> .env.prod
-          echo "DB_PORT=$DB_PORT" >> .env.prod
-          echo "DB_USERNAME=$DB_USERNAME" >> .env.prod
-          echo "MAILGUN_API_KEY=$MAILGUN_API_KEY" >> .env.prod
-          echo "MAILGUN_DOMAIN_NAME=$MAILGUN_DOMAIN_NAME" >> .env.prod
-          echo "MAILGUN_FROM_EMAIL=$MAILGUN_FROM_EMAIL" >> .env.prod
-          echo "PRIVATE_KEY=$PRIVATE_KEY" >> .env.prod
-          echo "AWS_ACCESS_KEY=$AWS_ACCESS_KEY" >> .env.prod
-          echo "AWS_SECRET_ACESS_KEY=$AWS_SECRET_ACESS_KEY" >> .env.prod
+          echo "DB_HOST=$DB_HOST" >> $GITHUB_WORKSPACE/.env.prod
+          echo "DB_NAME=$DB_NAME" >> $GITHUB_WORKSPACE/.env.prod
+          echo "DB_PASSWORD=$DB_PASSWORD" >> $GITHUB_WORKSPACE/.env.prod
+          echo "DB_PORT=$DB_PORT" >> $GITHUB_WORKSPACE/.env.prod
+          echo "DB_USERNAME=$DB_USERNAME" >> $GITHUB_WORKSPACE/.env.prod
+          echo "MAILGUN_API_KEY=$MAILGUN_API_KEY" >> $GITHUB_WORKSPACE/.env.prod
+          echo "MAILGUN_DOMAIN_NAME=$MAILGUN_DOMAIN_NAME" >> $GITHUB_WORKSPACE/.env.prod
+          echo "MAILGUN_FROM_EMAIL=$MAILGUN_FROM_EMAIL" >> $GITHUB_WORKSPACE/.env.prod
+          echo "PRIVATE_KEY=$PRIVATE_KEY" >> $GITHUB_WORKSPACE/.env.prod
+          echo "AWS_ACCESS_KEY=$AWS_ACCESS_KEY" >> $GITHUB_WORKSPACE/.env.prod
+          echo "AWS_SECRET_ACESS_KEY=$AWS_SECRET_ACESS_KEY" >> $GITHUB_WORKSPACE/.env.prod
         env:
           DB_HOST: ${{ secrets.DB_HOST }}
           DB_NAME: ${{ secrets.DB_NAME }}
