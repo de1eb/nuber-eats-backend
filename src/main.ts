@@ -18,7 +18,8 @@ async function bootstrap() {
 
   const corsConfig = process.env.NODE_ENV === 'prod' ? {
     origin: ["https://nuber-eats.click", "https://www.nuber-eats.click"],
-    methods: ['PUT']
+    methods: ['PUT'],
+    allowedHeaders: ['X-Request-From-CloudFront']
   } : {
     origin: ["http://localhost:3000"],
     methods: ['PUT']
