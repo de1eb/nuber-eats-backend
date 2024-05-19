@@ -1,8 +1,4 @@
 name: NUBER_EATS_BACKEND_CI_CD
-env:
-  REGISTRY: ghcr.io
-  DOCKER_IMAGE: ${{ github.repository }}
-  DOCKER_CONTAINER: nuber-eats-backend
 
 on:
   push:
@@ -69,6 +65,8 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
+    outputs:
+      output1: ${{steps.build-image.outputs.image}}
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
@@ -98,38 +96,51 @@ jobs:
           MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
           MAILGUN_DOMAIN_NAME: ${{ secrets.MAILGUN_DOMAIN_NAME }}
           MAILGUN_FROM_EMAIL: ${{ secrets.MAILGUN_FROM_EMAIL }}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-          AWS_SECRET_ACESS_KEY: ${{ secrets.AWS_SECRET_ACESS_KEY }}
+          AWS_SECRET_ACESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: Set up docker build
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to ghcr
-        uses: docker/login-action@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.CI_CD_TOKEN }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: 'ap-northeast-2'
 
-      - name: Build and Push
-        id: docker_build
-        uses: docker/build-push-action@v5
-        with:
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.DOCKER_IMAGE }}:latest
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: 'nuber-eats'
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to ECS.
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
   deploy:
     needs: build
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
-      - name: Login to ghcr
-        uses: docker/login-action@v3
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.CI_CD_TOKEN }}
-      - name: Run docker
-        run: |
-          docker stop ${{ env.DOCKER_CONTAINER }} && docker rm ${{ env.DOCKER_CONTAINER }} && docker rmi ${{ env.REGISTRY }}/${{ env.DOCKER_IMAGE }}:latest 
-          docker run -d -p 4000:4000 --name ${{ env.DOCKER_CONTAINER }} --restart always ${{ env.REGISTRY }}/${{ env.DOCKER_IMAGE }}:latest
+          task-definition: 'task-definition.json'
+          container-name: 'nuber-eats-container'
+          image: ${{ needs.build.outputs.output1 }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: 'nuber-eats-service'
+          cluster: 'nuber-eats-cluster'
+          wait-for-service-stability: true
