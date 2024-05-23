@@ -9,14 +9,15 @@ WORKDIR /app
 # 프로젝트 전체를 work directory에 추가
 ADD . /app/
 
-# 프로젝트에 사용되는 의존성 설치
-RUN npm install
+#add bash to container
+RUN apk add --no-cache bash
 
-# NEST.JS 빌드
+RUN npm install
 RUN npm run build
 
 # PORT(4000) 개방
 EXPOSE 4000
+
 
 # 서버 실행
 ENTRYPOINT npm run start:prod
