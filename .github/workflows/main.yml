@@ -31,19 +31,19 @@ jobs:
 
       - name: Generate Environment Variables File for Test
         run: |
-          touch .env.test
-          echo "DB_HOST=$DB_HOST" >> .env.test
-          echo "DB_NAME=$DB_NAME" >> .env.test
-          echo "DB_PASSWORD=$DB_PASSWORD" >> .env.test
-          echo "DB_PORT=$DB_PORT" >> .env.test
-          echo "DB_USERNAME=$DB_USERNAME" >> .env.test
-          echo "MAILGUN_API_KEY=$MAILGUN_API_KEY" >> .env.test
-          echo "MAILGUN_DOMAIN_NAME=$MAILGUN_DOMAIN_NAME" >> .env.test
-          echo "MAILGUN_FROM_EMAIL=$MAILGUN_FROM_EMAIL" >> .env.test
-          echo "JWT_PRIVATE_KEY=$PRIVATE_KEY" >> .env.test
-          echo "AWS_ACCESS_KEY=$AWS_ACCESS_KEY" >> .env.test
-          echo "AWS_SECRET_ACESS_KEY=$AWS_SECRET_ACESS_KEY" >> .env.test
-          cat .env.test
+          touch .test.env
+          echo "DB_HOST=$DB_HOST" >> .test.env
+          echo "DB_NAME=$DB_NAME" >> .test.env
+          echo "DB_PASSWORD=$DB_PASSWORD" >> .test.env
+          echo "DB_PORT=$DB_PORT" >> .test.env
+          echo "DB_USERNAME=$DB_USERNAME" >> .test.env
+          echo "MAILGUN_API_KEY=$MAILGUN_API_KEY" >> .test.env
+          echo "MAILGUN_DOMAIN_NAME=$MAILGUN_DOMAIN_NAME" >> .test.env
+          echo "MAILGUN_FROM_EMAIL=$MAILGUN_FROM_EMAIL" >> .test.env
+          echo "JWT_PRIVATE_KEY=$PRIVATE_KEY" >> .test.env
+          echo "AWS_ACCESS_KEY=$AWS_ACCESS_KEY" >> .test.env
+          echo "AWS_SECRET_ACESS_KEY=$AWS_SECRET_ACESS_KEY" >> .test.env
+          cat .test.env
         working-directory: ${{ github.workspace }}
         env:
           DB_HOST: 'localhost'
