@@ -129,9 +129,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download Task Definition Template
+      - name: Download task definition
         run: |
-          aws ecs describe-task-definition --task-definition task-definition --query taskDefinition > task-definition.json
+          aws ecs describe-task-definition --task-definition task-definition --query taskDefinition --debug > task-definition.json
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
