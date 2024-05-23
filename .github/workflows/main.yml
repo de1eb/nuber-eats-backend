@@ -131,10 +131,7 @@ jobs:
     steps:
       - name: Download Task Definition Template
         run: |
-          aws ecs describe-task-definition \
-            --task-definition task-definition \
-            --query taskDefinition \
-            > task-definition.json
+          aws ecs describe-task-definition --task-definition task-definition --query taskDefinition > task-definition.json
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
