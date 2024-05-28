@@ -20,4 +20,4 @@ EXPOSE 4000
 
 
 # 서버 실행
-ENTRYPOINT npm run start:pm2
+CMD npm run start:pm2
