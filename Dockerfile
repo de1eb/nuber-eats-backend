@@ -12,14 +12,15 @@ ADD . /app/
 #add bash to container
 RUN apk add --no-cache bash
 
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+RUN unzip awscliv2.zip
+RUN sudo ./aws/install
+
 RUN npm install
-RUN npm install pm2 -g
-RUN npm install aws-cli -g
 RUN npm run build
 
 # PORT(4000) 개방
 EXPOSE 4000
 
-
 # 서버 실행
-CMD [ "npm", "run", "start:pm2-runtime" ]
+CMD npm run start:prod

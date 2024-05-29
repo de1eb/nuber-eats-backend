@@ -73,19 +73,19 @@ jobs:
 
       - name: Generate Environment Variables File for Production
         run: |
-          touch .env.prod
-          echo "DB_HOST=$DB_HOST" >> .env.prod
-          echo "DB_NAME=$DB_NAME" >> .env.prod
-          echo "DB_PASSWORD=$DB_PASSWORD" >> .env.prod
-          echo "DB_PORT=$DB_PORT" >> .env.prod
-          echo "DB_USERNAME=$DB_USERNAME" >> .env.prod
-          echo "MAILGUN_API_KEY=$MAILGUN_API_KEY" >> .env.prod
-          echo "MAILGUN_DOMAIN_NAME=$MAILGUN_DOMAIN_NAME" >> .env.prod
-          echo "MAILGUN_FROM_EMAIL=$MAILGUN_FROM_EMAIL" >> .env.prod
-          echo "JWT_PRIVATE_KEY=$PRIVATE_KEY" >> .env.prod
-          echo "AWS_ACCESS_KEY=$AWS_ACCESS_KEY" >> .env.prod
-          echo "AWS_SECRET_ACESS_KEY=$AWS_SECRET_ACESS_KEY" >> .env.prod
-          cat .env.prod
+          touch .prod.env
+          echo "DB_HOST=$DB_HOST" >> .prod.env
+          echo "DB_NAME=$DB_NAME" >> .prod.env
+          echo "DB_PASSWORD=$DB_PASSWORD" >> .prod.env
+          echo "DB_PORT=$DB_PORT" >> .prod.env
+          echo "DB_USERNAME=$DB_USERNAME" >> .prod.env
+          echo "MAILGUN_API_KEY=$MAILGUN_API_KEY" >> .prod.env
+          echo "MAILGUN_DOMAIN_NAME=$MAILGUN_DOMAIN_NAME" >> .prod.env
+          echo "MAILGUN_FROM_EMAIL=$MAILGUN_FROM_EMAIL" >> .prod.env
+          echo "JWT_PRIVATE_KEY=$PRIVATE_KEY" >> .prod.env
+          echo "AWS_ACCESS_KEY=$AWS_ACCESS_KEY" >> .prod.env
+          echo "AWS_SECRET_ACESS_KEY=$AWS_SECRET_ACESS_KEY" >> .prod.env
+          cat .prod.env
         working-directory: ${{ github.workspace }}
         env:
           DB_HOST: ${{ secrets.DB_HOST }}
