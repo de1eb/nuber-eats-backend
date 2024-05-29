@@ -13,6 +13,7 @@ ADD . /app/
 RUN apk add --no-cache bash
 
 RUN npm install
+RUN npm install pm2 -g
 RUN npm run build
 
 # PORT(4000) 개방
@@ -20,4 +21,4 @@ EXPOSE 4000
 
 
 # 서버 실행
-CMD npm run start:pm2
+CMD [ "npm", "run", "start:pm2-runtime" ]
