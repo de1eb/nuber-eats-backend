@@ -14,6 +14,7 @@ RUN apk add --no-cache bash
 
 RUN npm install
 RUN npm install pm2 -g
+RUN npm install aws-cli -g
 RUN npm run build
 
 # PORT(4000) 개방
