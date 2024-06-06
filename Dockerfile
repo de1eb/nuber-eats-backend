@@ -10,10 +10,7 @@ WORKDIR /app
 ADD . /app/
 
 #add bash to container
-RUN apk add --no-cache bash curl unzip
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-RUN unzip awscliv2.zip
-RUN ./aws/install
+RUN apt-get update && apt-get install -y awscli
 
 RUN npm install
 RUN npm run build
