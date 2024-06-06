@@ -10,7 +10,7 @@ WORKDIR /app
 ADD . /app/
 
 #add bash to container
-RUN apt-get update && apt-get install -y awscli
+RUN apk update && apk add --no-cache aws-cli
 
 RUN npm install
 RUN npm run build
