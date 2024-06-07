@@ -25,7 +25,7 @@ import { UsersModule } from './users/users.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: process.env.NODE_ENV === 'prod' ? '.prod.env' : process.env.NODE_ENV === 'dev' ? '.dev.env' : process.env.NODE_ENV === 'test' ? '.test.env' : null,
+      envFilePath: process.env.NODE_ENV === 'prod' ? './.prod.env' : process.env.NODE_ENV === 'dev' ? './.dev.env' : process.env.NODE_ENV === 'test' ? './.test.env' : null,
       validationSchema: Joi.object({
         NODE_ENV: Joi.string()
           .valid("dev", "prod", "test")
