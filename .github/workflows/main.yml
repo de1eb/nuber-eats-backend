@@ -30,39 +30,13 @@ jobs:
           cache: 'npm'
 
       - name: Generate Environment Variables File for Test
-        run: |
-          touch .test.env
-          echo "DB_HOST=$DB_HOST" >> .test.env
-          echo "DB_NAME=$DB_NAME" >> .test.env
-          echo "DB_PASSWORD=$DB_PASSWORD" >> .test.env
-          echo "DB_PORT=$DB_PORT" >> .test.env
-          echo "DB_USERNAME=$DB_USERNAME" >> .test.env
-          echo "MAILGUN_API_KEY=$MAILGUN_API_KEY" >> .test.env
-          echo "MAILGUN_DOMAIN_NAME=$MAILGUN_DOMAIN_NAME" >> .test.env
-          echo "MAILGUN_FROM_EMAIL=$MAILGUN_FROM_EMAIL" >> .test.env
-          echo "JWT_PRIVATE_KEY=$PRIVATE_KEY" >> .test.env
-          echo "AWS_ACCESS_KEY=$AWS_ACCESS_KEY" >> .test.env
-          echo "AWS_SECRET_ACESS_KEY=$AWS_SECRET_ACESS_KEY" >> .test.env
-          cat .test.env
-        working-directory: ${{ github.workspace }}
-        env:
-          DB_HOST: 'localhost'
-          DB_NAME: 'postgres'
-          DB_PASSWORD: 'postgres'
-          DB_PORT: 5432
-          DB_USERNAME: 'postgres'
-          MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
-          MAILGUN_DOMAIN_NAME: ${{ secrets.MAILGUN_DOMAIN_NAME }}
-          MAILGUN_FROM_EMAIL: ${{ secrets.MAILGUN_FROM_EMAIL }}
-          PRIVATE_KEY: '1111'
-          AWS_ACCESS_KEY: '1111'
-          AWS_SECRET_ACESS_KEY: '1111'
+        run: aws s3 cp s3://nuber-eats-env/.test.env ./
 
       - run: npm install
       - run: npm run test:cov
       - run: npm run test:e2e
 
-  deploy:
+  build:
     needs: test
     runs-on: ubuntu-latest
     outputs:
@@ -96,6 +70,20 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: 'ap-northeast-2'
+
       - name: Download task definition
         run: |
           aws ecs describe-task-definition --task-definition nuber-eats-application --query taskDefinition > task-definition.json
@@ -106,7 +94,7 @@ jobs:
         with:
           task-definition: 'task-definition.json'
           container-name: 'nuber-eats-container'
-          image: ${{ steps.build-image.outputs.image }}
+          image: ${{ needs.build.outputs.output1 }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
