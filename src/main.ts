@@ -8,7 +8,7 @@ async function bootstrap() {
   const keyFile = process.env.NODE_ENV === 'prod' ? fs.readFileSync(SSL_KEY_LETS_ENCRYPT_PATH) : null;
   const certFile = process.env.NODE_ENV === 'prod' ? fs.readFileSync(SSL_CERTIFICATE_LETS_ENCRYPT_PATH) : null;
   let app: INestApplication<any>;
-
+  console.log('NODE_ENV: ', process.env.NODE_ENV);
   process.env.NODE_ENV === 'prod' ? app = await NestFactory.create(AppModule, {
     httpsOptions: {
       key: keyFile,
@@ -24,6 +24,7 @@ async function bootstrap() {
     origin: ["http://localhost:3000"],
     methods: ['PUT']
   }
+  console.log('corsConfig: ', corsConfig);
 
   const port = 4000;
   app.useGlobalPipes(new ValidationPipe());
