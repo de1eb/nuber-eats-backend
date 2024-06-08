@@ -2,7 +2,7 @@ import { ApolloDriver } from '@nestjs/apollo';
 import {
   Module
 } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -25,7 +25,7 @@ import { UsersModule } from './users/users.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: process.env.NODE_ENV === 'prod' ? './.prod.env' : process.env.NODE_ENV === 'dev' ? './.dev.env' : process.env.NODE_ENV === 'test' ? './.test.env' : null,
+      envFilePath: process.env.NODE_ENV === 'prod' ? '.prod.env' : process.env.NODE_ENV === 'dev' ? '.dev.env' : process.env.NODE_ENV === 'test' ? '.test.env' : null,
       validationSchema: Joi.object({
         NODE_ENV: Joi.string()
           .valid("dev", "prod", "test")
@@ -43,7 +43,11 @@ import { UsersModule } from './users/users.module';
         AWS_SECRET_ACESS_KEY: Joi.string().required()
       }),
     }),
-    TypeOrmModule.forRoot(process.env.NODE_ENV === 'prod' ? typeorm_config_prod : process.env.NODE_ENV === 'dev' ? typeorm_config_dev : process.env.NODE_ENV === 'test' ? typeorm_config_test : null),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: process.env.NODE_ENV === 'prod' ? typeorm_config_prod : process.env.NODE_ENV === 'dev' ? typeorm_config_dev : process.env.NODE_ENV === 'test' ? typeorm_config_test : null,
+      inject: [ConfigService]
+    }),
     GraphQLModule.forRoot({
       driver: ApolloDriver,
       subscriptions: {
