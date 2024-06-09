@@ -14,11 +14,17 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: test
+          POSTGRES_USER: ${{ env.DB_USERNAME }}
+          POSTGRES_PASSWORD: ${{ env.DB_PASSWORD }}
+          POSTGRES_DB: ${{ env.DB_NAME }}
         ports:
           - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
@@ -38,6 +44,23 @@ jobs:
 
       - name: Generate Environment Variables File for Test
         run: aws s3 cp s3://nuber-eats-env/.test.env ./
+
+      - name: Load environment variables
+        run: |
+          set -a
+          source .test.env
+          set -u
+          echo "DB_USERNAME=${DB_USERNAME}" >> $GITHUB_ENV
+          echo "DB_PASSWORD${DB_PASSWORD}" >> $GITHUB_ENV
+          echo "DB_NAME=${DB_NAME}" >> $GITHUB_ENV
+          echo "DB_PORT=${DB_PORT}" >> $GITHUB_ENV
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          until pg_isready -h localhost -p ${{ env.DB_PORT }} -U ${{ env.DB_USERNAME }}; do
+            echo "Waiting for PostgreSQL to be ready..."
+            sleep 1
+          done
 
       - run: npm install
       - run: npm run test:cov
