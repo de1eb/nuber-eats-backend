@@ -9,8 +9,9 @@ WORKDIR /app
 # 프로젝트 전체를 work directory에 추가
 ADD . /app/
 
-#add AWS CLI to container
+#add AWS CLI & curl to container
 RUN apk update && apk add --no-cache aws-cli
+RUN apk add --no-cache curl
 
 RUN npm install
 RUN npm run build
