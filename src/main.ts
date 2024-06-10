@@ -26,6 +26,14 @@ async function bootstrap() {
   }
   console.log('corsConfig: ', corsConfig);
 
+  app.use((req, res, next) => {
+    console.log('Request headers:', req.headers);
+    res.on('finish', () => {
+      console.log('Response headers:', res.getHeaders());
+    });
+    next();
+  });
+
   const port = 4000;
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors(corsConfig)
