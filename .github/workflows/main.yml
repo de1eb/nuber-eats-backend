@@ -29,7 +29,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: 'ap-northeast-2'
+          aws-region: ${{secrets.AWS_REGION}}
 
       - name: Setup node.js 20
         uses: actions/setup-node@v4
@@ -38,7 +38,7 @@ jobs:
           cache: 'npm'
 
       - name: Generate Environment Variables File for Test
-        run: aws s3 cp s3://nuber-eats-env/.test.env ./
+        run: aws s3 cp ${{secrets.ENV_ADDRESS}} ./
 
       - run: npm install
       - run: npm run test:cov
@@ -68,7 +68,7 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: 'nuber-eats'
+          ECR_REPOSITORY: ${{secrets.ECR_REPOSITORY}}
           IMAGE_TAG: ${{ github.sha }}
         run: |
           # Build a docker container and
@@ -108,6 +108,6 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: 'nuber-eats-service'
+          service: 'nuber-eats'
           cluster: 'nuber-eats-cluster'
           wait-for-service-stability: true
