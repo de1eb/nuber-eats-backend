@@ -2,8 +2,12 @@
 
 The Backend of Nuber Eats Clone
 
-## User Model:
 
+## Backend Infra structrue
+![nuber-eats](https://github.com/de1eb/nuber-eats-backend/assets/34806504/14c645eb-e7ab-4188-a940-7e7e3c52ce1f)
+
+
+## User Model:
 - id
 - createdAt
 - updatedAt
