@@ -15,22 +15,4 @@ Frontend: React Router 6, graphql-codegen, Search Page
 ![nuber-eats](https://github.com/de1eb/nuber-eats-backend/assets/34806504/14c645eb-e7ab-4188-a940-7e7e3c52ce1f)
 
 ## Entity–relationship model(ERD)
-
-
-
-## User Model:
-- id
-- createdAt
-- updatedAt
-
-- email
-- password
-- role(client|owner|delivery)
-
-## User CRUD:
-
-- Create Account
-- Log In
-- See Profile
-- Edit Profile
-- Verify Email
+![nuberEatsERD pgerd](https://github.com/user-attachments/assets/ad0c6d2b-8dcd-46fe-a627-fd835f562e21)
